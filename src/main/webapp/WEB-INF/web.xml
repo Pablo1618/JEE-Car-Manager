@@ -2,6 +2,13 @@
          xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    
+    <!-- Katalog z awatarami -->
+    <context-param>
+        <param-name>avatars.directory</param-name>
+        <param-value>${user.home}/car-manager/avatars</param-value>
+    </context-param>
+    
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>

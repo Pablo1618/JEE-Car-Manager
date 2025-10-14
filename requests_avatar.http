@@ -1,0 +1,16 @@
+### Upload avatar
+PUT http://localhost:9080/car-manager/api/avatars/f8e59045-878f-40cb-8519-eaeb5953bc15
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar";
+Content-Type: image/png
+
+< ./avatars/avatar4.png
+--boundary--
+
+### Get avatar
+GET http://localhost:9080/car-manager/api/avatars/f8e59045-878f-40cb-8519-eaeb5953bc15
+
+### Delete avatar
+DELETE http://localhost:9080/car-manager/api/avatars/8322d639-85db-483a-a772-03241c2fb173

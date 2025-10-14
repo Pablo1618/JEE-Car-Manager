@@ -1,0 +1,31 @@
+
+### Get all users
+GET http://localhost:9080/car-manager/api/users
+Accept: application/json
+
+### Get user
+GET http://localhost:9080/car-manager/api/users/8322d639-85db-483a-a772-03241c2fb173
+Accept: application/json
+
+### Create new user
+POST http://localhost:9080/car-manager/api/users
+Content-Type: application/json
+
+{
+  "login": "user123",
+  "age": 30,
+  "driverLicenseIssueDate": "2003-03-20"
+}
+
+### Delete user
+DELETE http://localhost:9080/car-manager/api/users/87643959-4cad-4d84-8683-ba91e5fa1da2
+
+### Update user
+PUT http://localhost:9080/car-manager/api/users/e59d71e9-520f-4c24-abe6-596b37d230a8
+Content-Type: application/json
+
+{
+  "login": "updated_user",
+  "age": 29,
+  "driverLicenseIssueDate": "2018-09-10"
+}

@@ -1,4 +1,5 @@
 <img src="https://javastart.pl/img/jakartaee_logo.jpg" width="30%" height="auto">
+
 # Car Management App
 
 Code for the Jakarta Enterprise Edition project in the 7th semester.
