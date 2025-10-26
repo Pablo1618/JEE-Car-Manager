@@ -5,18 +5,24 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import pablo.jakarta.model.User;
-import pablo.jakarta.service.UserService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import pablo.jakarta.model.Model;
+import pablo.jakarta.model.enums.Brand;
+import pablo.jakarta.service.ModelService;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-@WebServlet(name = "UserServlet", urlPatterns = {"/api/users", "/api/users/*"})
-public class UserServlet extends HttpServlet {
+@WebServlet(name = "ModelServlet", urlPatterns = {"/api/models", "/api/models/*"})
+public class ModelServlet extends HttpServlet {
 
     @Inject
-    private UserService userService;
+    private ModelService modelService;
     
     private Jsonb jsonb;
 
@@ -32,14 +38,25 @@ public class UserServlet extends HttpServlet {
 
         try {
             String id = extractId(req);
-            if (id == null) {
-                //GET api/users
-                resp.getWriter().write(jsonb.toJson(userService.getAllUsers()));
+            String brandParam = req.getParameter("brand");
+            
+            if (id == null && brandParam == null) {
+                // GET /api/models
+                resp.getWriter().write(jsonb.toJson(modelService.getAllModels()));
+            } else if (id == null && brandParam != null) {
+                // GET /api/models?brand=TOYOTA
+                try {
+                    Brand brand = Brand.valueOf(brandParam.toUpperCase());
+                    List<Model> models = modelService.getModelsByBrand(brand);
+                    resp.getWriter().write(jsonb.toJson(models));
+                } catch (IllegalArgumentException e) {
+                    sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid brand: " + brandParam);
+                }
             } else {
-                //GET api/users/ID
-                Optional<User> user = userService.getUserById(UUID.fromString(id));
-                if (user.isPresent()) {
-                    resp.getWriter().write(jsonb.toJson(user.get()));
+                // GET /api/models/ID
+                Optional<Model> model = modelService.getModelById(UUID.fromString(id));
+                if (model.isPresent()) {
+                    resp.getWriter().write(jsonb.toJson(model.get()));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
@@ -55,12 +72,14 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setupJson(resp);
         try {
-            User user = jsonb.fromJson(req.getReader(), User.class);
-            User created = userService.createUser(user);
+            Model model = jsonb.fromJson(req.getReader(), Model.class);
+            Model created = modelService.createModel(model);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.getWriter().write(jsonb.toJson(created));
+        } catch (IllegalArgumentException e) {
+            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid user data");
+            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid model data");
         }
     }
 
@@ -70,12 +89,12 @@ public class UserServlet extends HttpServlet {
         try {
             String id = extractId(req);
             if (id == null) {
-                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "User ID required");
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Model ID required");
                 return;
             }
 
-            User updated = jsonb.fromJson(req.getReader(), User.class);
-            Optional<User> result = userService.updateUser(UUID.fromString(id), updated);
+            Model updated = jsonb.fromJson(req.getReader(), Model.class);
+            Optional<Model> result = modelService.updateModel(UUID.fromString(id), updated);
 
             if (result.isPresent()) {
                 resp.getWriter().write(jsonb.toJson(result.get()));
@@ -93,11 +112,11 @@ public class UserServlet extends HttpServlet {
         try {
             String id = extractId(req);
             if (id == null) {
-                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "User ID required");
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Model ID required");
                 return;
             }
 
-            boolean deleted = userService.deleteUser(UUID.fromString(id));
+            boolean deleted = modelService.deleteModel(UUID.fromString(id));
             resp.setStatus(deleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_NOT_FOUND);
         } catch (IllegalArgumentException e) {
             sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -124,6 +143,5 @@ public class UserServlet extends HttpServlet {
             path = path.substring(0, path.length() - 1);
         }
         return path;
-
     }
 }

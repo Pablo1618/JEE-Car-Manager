@@ -1,5 +1,7 @@
 package pablo.jakarta.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import pablo.jakarta.repository.AvatarRepository;
 import pablo.jakarta.repository.UserRepository;
 
@@ -9,11 +11,16 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
 public class AvatarService {
     
-    private final AvatarRepository avatarRepository;
-    private final UserRepository userRepository;
+    private AvatarRepository avatarRepository;
+    private UserRepository userRepository;
     
+    public AvatarService() {
+    }
+    
+    @Inject
     public AvatarService(AvatarRepository avatarRepository, UserRepository userRepository) {
         this.avatarRepository = avatarRepository;
         this.userRepository = userRepository;

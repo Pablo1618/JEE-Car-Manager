@@ -1,0 +1,34 @@
+### Get all models
+GET http://localhost:9080/car-manager/api/models
+Accept: application/json
+
+### Get all models by brand
+GET http://localhost:9080/car-manager/api/models?brand=TOYOTA
+Accept: application/json
+
+### Get model info
+GET http://localhost:9080/car-manager/api/models/ca28bdd7-76e9-4dc5-af56-f27f79f3f547
+Accept: application/json
+
+### Create new model
+POST http://localhost:9080/car-manager/api/models
+Content-Type: application/json
+
+{
+  "brand": "AUDI",
+  "name": "A4",
+  "hp": 190
+}
+
+### Update model
+PUT http://localhost:9080/car-manager/api/models/52b3d04d-d6b1-4dd4-ae00-8309d729745d
+Content-Type: application/json
+
+{
+  "brand": "TOYOTA",
+  "name": "Camry Hybrid",
+  "hp": 215
+}
+
+### Delete model
+DELETE http://localhost:9080/car-manager/api/models/41340105-8c2b-45ac-bdef-366f95d93d53

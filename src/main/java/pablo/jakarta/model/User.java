@@ -1,17 +1,18 @@
 package pablo.jakarta.model;
 
 import jakarta.json.bind.annotation.JsonbTransient;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"cars"})
+@EqualsAndHashCode(exclude = {"cars"})
 public class User {
     private UUID id;
     private String login;

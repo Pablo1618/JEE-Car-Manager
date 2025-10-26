@@ -1,19 +1,23 @@
 package pablo.jakarta.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.json.bind.annotation.JsonbTransient;
+import lombok.*;
 import pablo.jakarta.model.enums.Brand;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"cars"})
+@EqualsAndHashCode(exclude = {"cars"})
 public class Model {
     private UUID id;
     private Brand brand;
     private String name;
     private Integer hp;
+    
+    @JsonbTransient
     private List<Car> cars;
 }

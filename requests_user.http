@@ -4,7 +4,7 @@ GET http://localhost:9080/car-manager/api/users
 Accept: application/json
 
 ### Get user
-GET http://localhost:9080/car-manager/api/users/8322d639-85db-483a-a772-03241c2fb173
+GET http://localhost:9080/car-manager/api/users/66fa581f-a118-45d1-83b3-b4ea0a5ad679
 Accept: application/json
 
 ### Create new user

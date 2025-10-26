@@ -5,18 +5,23 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import pablo.jakarta.model.User;
-import pablo.jakarta.service.UserService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import pablo.jakarta.model.Car;
+import pablo.jakarta.service.CarService;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-@WebServlet(name = "UserServlet", urlPatterns = {"/api/users", "/api/users/*"})
-public class UserServlet extends HttpServlet {
+@WebServlet(name = "CarServlet", urlPatterns = {"/api/cars", "/api/cars/*"})
+public class CarServlet extends HttpServlet {
 
     @Inject
-    private UserService userService;
+    private CarService carService;
     
     private Jsonb jsonb;
 
@@ -32,14 +37,25 @@ public class UserServlet extends HttpServlet {
 
         try {
             String id = extractId(req);
-            if (id == null) {
-                //GET api/users
-                resp.getWriter().write(jsonb.toJson(userService.getAllUsers()));
+            String modelIdParam = req.getParameter("modelId");
+            String ownerIdParam = req.getParameter("ownerId");
+            
+            if (id == null && modelIdParam == null && ownerIdParam == null) {
+                // GET /api/cars
+                resp.getWriter().write(jsonb.toJson(carService.getAllCars()));
+            } else if (id == null && modelIdParam != null) {
+                // GET /api/cars?modelId=ID
+                List<Car> cars = carService.getCarsByModelId(UUID.fromString(modelIdParam));
+                resp.getWriter().write(jsonb.toJson(cars));
+            } else if (id == null && ownerIdParam != null) {
+                // GET /api/cars?ownerId=ID
+                List<Car> cars = carService.getCarsByOwnerId(UUID.fromString(ownerIdParam));
+                resp.getWriter().write(jsonb.toJson(cars));
             } else {
-                //GET api/users/ID
-                Optional<User> user = userService.getUserById(UUID.fromString(id));
-                if (user.isPresent()) {
-                    resp.getWriter().write(jsonb.toJson(user.get()));
+                // GET /api/cars/ID
+                Optional<Car> car = carService.getCarById(UUID.fromString(id));
+                if (car.isPresent()) {
+                    resp.getWriter().write(jsonb.toJson(car.get()));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
@@ -55,12 +71,14 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setupJson(resp);
         try {
-            User user = jsonb.fromJson(req.getReader(), User.class);
-            User created = userService.createUser(user);
+            Car car = jsonb.fromJson(req.getReader(), Car.class);
+            Car created = carService.createCar(car);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.getWriter().write(jsonb.toJson(created));
+        } catch (IllegalArgumentException e) {
+            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid user data");
+            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid car data: " + e.getMessage());
         }
     }
 
@@ -70,12 +88,12 @@ public class UserServlet extends HttpServlet {
         try {
             String id = extractId(req);
             if (id == null) {
-                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "User ID required");
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Car ID required");
                 return;
             }
 
-            User updated = jsonb.fromJson(req.getReader(), User.class);
-            Optional<User> result = userService.updateUser(UUID.fromString(id), updated);
+            Car updated = jsonb.fromJson(req.getReader(), Car.class);
+            Optional<Car> result = carService.updateCar(UUID.fromString(id), updated);
 
             if (result.isPresent()) {
                 resp.getWriter().write(jsonb.toJson(result.get()));
@@ -93,11 +111,11 @@ public class UserServlet extends HttpServlet {
         try {
             String id = extractId(req);
             if (id == null) {
-                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "User ID required");
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Car ID required");
                 return;
             }
 
-            boolean deleted = userService.deleteUser(UUID.fromString(id));
+            boolean deleted = carService.deleteCar(UUID.fromString(id));
             resp.setStatus(deleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_NOT_FOUND);
         } catch (IllegalArgumentException e) {
             sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -124,6 +142,5 @@ public class UserServlet extends HttpServlet {
             path = path.substring(0, path.length() - 1);
         }
         return path;
-
     }
 }

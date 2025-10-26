@@ -1,14 +1,15 @@
 package pablo.jakarta.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"model", "owner"})
+@EqualsAndHashCode(exclude = {"model", "owner"})
 public class Car {
     private UUID id;
     private Model model;

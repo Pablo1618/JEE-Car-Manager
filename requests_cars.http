@@ -1,0 +1,50 @@
+### Get all cars
+GET http://localhost:9080/car-manager/api/cars
+Accept: application/json
+
+### Get car
+GET http://localhost:9080/car-manager/api/cars/92aafd27-a3a8-417e-a769-7912738983ce
+Accept: application/json
+
+### Get cars by model
+GET http://localhost:9080/car-manager/api/cars?modelId=ca28bdd7-76e9-4dc5-af56-f27f79f3f547
+Accept: application/json
+
+### Get cars by owner
+GET http://localhost:9080/car-manager/api/cars?ownerId=97996278-5d91-4b61-a648-bb46976e0b05
+Accept: application/json
+
+### Create car
+POST http://localhost:9080/car-manager/api/cars
+Content-Type: application/json
+
+{
+  "model": {
+    "id": "41340105-8c2b-45ac-bdef-366f95d93d53"
+  },
+  "owner": {
+    "id": "97996278-5d91-4b61-a648-bb46976e0b05"
+  },
+  "licensePlate": "GDA12345",
+  "mileage": 15000,
+  "purchaseDate": "2023-06-15"
+}
+
+### Update car
+PUT http://localhost:9080/car-manager/api/cars/92aafd27-a3a8-417e-a769-7912738983ce
+Content-Type: application/json
+
+{
+  "model": {
+    "id": "ca28bdd7-76e9-4dc5-af56-f27f79f3f547"
+  },
+  "owner": {
+    "id": "4d86cc17-d992-4dc1-a8d9-013de53a097e"
+  },
+  "licensePlate": "GDA12345",
+  "mileage": 60000,
+  "purchaseDate": "2023-05-15"
+}
+
+### Delete car
+DELETE http://localhost:9080/car-manager/api/cars/92aafd27-a3a8-417e-a769-7912738983ce

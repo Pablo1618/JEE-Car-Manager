@@ -1,5 +1,8 @@
 package pablo.jakarta.repository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,12 +13,20 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
 public class AvatarRepository {
     
-    private final Path avatarsDirectory;
+    private Path avatarsDirectory;
     
-    public AvatarRepository(String avatarsDirectoryPath) {
-        this.avatarsDirectory = Paths.get(avatarsDirectoryPath);
+    @PostConstruct
+    public void init() {
+        String dir = System.getProperty("avatars.directory");
+        if (dir == null) {
+            dir = System.getProperty("user.home") + "/car-manager/avatars";
+        } else {
+            dir = dir.replace("${user.home}", System.getProperty("user.home"));
+        }
+        this.avatarsDirectory = Paths.get(dir);
         initializeDirectory();
     }
     

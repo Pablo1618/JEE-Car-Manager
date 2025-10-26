@@ -1,5 +1,6 @@
 package pablo.jakarta.controller;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,10 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import pablo.jakarta.repository.AvatarRepository;
-import pablo.jakarta.repository.UserRepository;
 import pablo.jakarta.service.AvatarService;
-import pablo.jakarta.service.UserService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,40 +18,16 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
-@WebServlet(name = "AvatarServlet", urlPatterns = "/api/avatars/*", loadOnStartup = 2)
+@WebServlet(name = "AvatarServlet", urlPatterns = "/api/avatars/*")
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class AvatarServlet extends HttpServlet {
 
+    @Inject
     private AvatarService avatarService;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-
-        avatarService = (AvatarService) getServletContext().getAttribute("avatarService");
-        if (avatarService == null) {
-            String dir = getServletContext().getInitParameter("avatars.directory");
-            if (dir == null) {
-                dir = System.getProperty("user.home") + "/.car-manager/avatars";
-            }
-            else {
-                dir = dir.replace("${user.home}", System.getProperty("user.home"));
-            }
-
-            UserRepository userRepo = (UserRepository) getServletContext().getAttribute("userRepository");
-            if (userRepo == null) {
-                UserService userService = (UserService) getServletContext().getAttribute("userService");
-                userRepo = new UserRepository();
-                getServletContext().setAttribute("userRepository", userRepo);
-            }
-
-            avatarService = new AvatarService(new AvatarRepository(dir), userRepo);
-            getServletContext().setAttribute("avatarService", avatarService);
-        }
-    }
-
-    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        // GET /api/avatars/ID
         UUID userId = getUserId(req);
         Optional<Path> path = avatarService.getAvatar(userId);
 
