@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
+    xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+    <ui:define name="title">Welcome</ui:define>
+    <ui:define name="content">
+        <h2>Welcome to Car Manager</h2>
+        <p>This app allows to manage car models and cars</p>
+
+        <p>
+            <h:link outcome="/model/model_list.xhtml" value="View Car Models" styleClass="btn" />
+        </p>
+    </ui:define>
+</ui:composition>
+
+</html>

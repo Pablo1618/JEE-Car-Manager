@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
+    xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="modelId" value="#{modelDetailView.modelId}" converter="uuidConverter" />
+        <f:viewAction action="#{modelDetailView.init}" />
+    </f:metadata>
+
+    <ui:define name="title">Model Details</ui:define>
+    <ui:define name="content">
+        <h:link outcome="model_list" value="Back to Models" styleClass="btn" />
+
+        <h:panelGroup rendered="#{empty modelDetailView.model}">
+            <p>Model not found</p>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty modelDetailView.model}">
+            <h2>Model Details</h2>
+            <p><strong>Brand:</strong> #{modelDetailView.model.brand}</p>
+            <p><strong>Model:</strong> #{modelDetailView.model.name}</p>
+            <p><strong>Horsepower:</strong> #{modelDetailView.model.hp}</p>
+            <p><strong>ID:</strong> #{modelDetailView.model.id}</p>
+
+            <h3>Cars with this Model</h3>
+            <h:link outcome="/car/car_form" value="Add New Car" styleClass="btn">
+                <f:param name="modelId" value="#{modelDetailView.model.id}" />
+            </h:link>
+
+            <h:panelGroup id="carListPanel">
+                <h:panelGroup rendered="#{empty modelDetailView.cars}">
+                    <p>No cars found for this model</p>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{not empty modelDetailView.cars}">
+                    <p>Total Cars: #{modelDetailView.cars.size()}</p>
+                    <h:dataTable value="#{modelDetailView.cars}" var="car">
+                        <h:column>
+                            <f:facet name="header">License Plate</f:facet>
+                            #{car.licensePlate}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Owner</f:facet>
+                            #{empty car.owner ? 'No owner' : car.owner.login}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Mileage</f:facet>
+                            #{car.mileage} km
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Purchase Date</f:facet>
+                            #{car.purchaseDate}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action</f:facet>
+                            <h:link outcome="/car/car_detail" value="View" styleClass="btn">
+                                <f:param name="carId" value="#{car.id}" />
+                            </h:link>
+                            <h:link outcome="/car/car_form" value="Edit" styleClass="btn">
+                                <f:param name="carId" value="#{car.id}" />
+                                <f:param name="modelId" value="#{modelDetailView.model.id}" />
+                            </h:link>
+                            <h:form style="display:inline;">
+                                <h:commandButton value="Delete" styleClass="btn"
+                                    action="#{modelDetailView.deleteCar(car.id)}">
+                                    <f:ajax execute="@form" render=":carListPanel :messages" />
+                                </h:commandButton>
+                            </h:form>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <h:messages id="messages" />
+    </ui:define>
+</ui:composition>
+
+</html>

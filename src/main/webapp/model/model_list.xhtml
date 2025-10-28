@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
+    xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+    <ui:define name="title">Car Models</ui:define>
+    <ui:define name="content">
+        <h2>Car Models</h2>
+
+        <h:panelGroup id="modelListPanel">
+            <h:panelGroup rendered="#{empty modelListView.models}">
+                <p>No models available</p>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not empty modelListView.models}">
+                <h:dataTable value="#{modelListView.models}" var="model">
+                    <h:column>
+                        <f:facet name="header">Brand</f:facet>
+                        #{model.brand}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Model</f:facet>
+                        #{model.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">HP</f:facet>
+                        #{model.hp}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Cars</f:facet>
+                        #{modelListView.getCarCountForModel(model.id)}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Action</f:facet>
+                        <h:link outcome="model_detail" value="View" styleClass="btn">
+                            <f:param name="modelId" value="#{model.id}" />
+                        </h:link>
+                        <h:form style="display:inline;">
+                            <h:commandButton value="Delete" styleClass="btn"
+                                action="#{modelListView.deleteModel(model.id)}">
+                                <f:ajax execute="@form" render=":modelListPanel :messages" />
+                            </h:commandButton>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <h:messages id="messages" />
+    </ui:define>
+</ui:composition>
+
+</html>

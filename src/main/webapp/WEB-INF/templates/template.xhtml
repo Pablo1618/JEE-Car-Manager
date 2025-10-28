@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
+    xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>
+        <ui:insert name="title">Car Manager</ui:insert>
+    </title>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+<h:body>
+    <div class="header">
+        <h:graphicImage value="/logo.png" width="80" />
+        <h1>Car Manager</h1>
+    </div>
+
+    <nav>
+        <h:link outcome="/index.xhtml" value="Home" />
+        <h:link outcome="/model/model_list.xhtml" value="Models" />
+    </nav>
+
+    <ui:insert name="content">
+        <p>Placeholder content</p>
+    </ui:insert>
+
+    <hr />
+    <footer>
+        <p>Car Manager 2025</p>
+    </footer>
+</h:body>
+
+</html>

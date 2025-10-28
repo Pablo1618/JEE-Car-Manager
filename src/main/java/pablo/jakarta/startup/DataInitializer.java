@@ -82,6 +82,14 @@ public class DataInitializer {
             car3.setMileage(5000);
             car3.setPurchaseDate(LocalDate.of(2025, 1, 10));
             carService.createCar(car3);
+
+            Car car4 = new Car();
+            car4.setModel(camry);
+            car4.setOwner(users.get(2));
+            car4.setLicensePlate("GDA88888");
+            car4.setMileage(75000);
+            car4.setPurchaseDate(LocalDate.of(2020, 3, 10));
+            carService.createCar(car4);
         }
 
     }

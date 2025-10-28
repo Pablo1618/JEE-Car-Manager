@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
+    xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="carId" value="#{carFormView.carId}" converter="uuidConverter" />
+        <f:viewParam name="modelId" value="#{carFormView.modelId}" converter="uuidConverter" />
+        <f:viewAction action="#{carFormView.init}" />
+    </f:metadata>
+
+    <ui:define name="title">#{carFormView.pageTitle}</ui:define>
+    <ui:define name="content">
+        <h2>#{carFormView.pageTitle}</h2>
+
+        <h:form>
+            <table>
+                <tr>
+                    <td>
+                        <h:outputLabel for="licensePlate" value="License Plate:" />
+                    </td>
+                    <td>
+                        <h:inputText id="licensePlate" value="#{carFormView.car.licensePlate}" required="true"
+                            requiredMessage="License plate is required">
+                            <f:validateLength minimum="2" maximum="15" />
+                        </h:inputText>
+                        <h:message for="licensePlate" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h:outputLabel for="model" value="Model:" />
+                    </td>
+                    <td>
+                        <h:selectOneMenu id="model" value="#{carFormView.car.model}" converter="modelConverter"
+                            required="true" requiredMessage="Model is required">
+                            <f:selectItem itemLabel="-- Select Model --" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{carFormView.availableModels}" var="m"
+                                itemLabel="#{m.brand} #{m.name}" itemValue="#{m}" />
+                        </h:selectOneMenu>
+                        <h:message for="model" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h:outputLabel for="owner" value="Owner:" />
+                    </td>
+                    <td>
+                        <h:selectOneMenu id="owner" value="#{carFormView.car.owner}" converter="userConverter">
+                            <f:selectItem itemLabel="-- No Owner --" itemValue="#{null}" />
+                            <f:selectItems value="#{carFormView.availableUsers}" var="u"
+                                itemLabel="#{u.login} (Age: #{u.age})" itemValue="#{u}" />
+                        </h:selectOneMenu>
+                        <h:message for="owner" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h:outputLabel for="mileage" value="Mileage (km):" />
+                    </td>
+                    <td>
+                        <h:inputText id="mileage" value="#{carFormView.car.mileage}" required="true"
+                            requiredMessage="Mileage is required">
+                            <f:validateLongRange minimum="0" maximum="999999" />
+                        </h:inputText>
+                        <h:message for="mileage" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h:outputLabel for="purchaseDate" value="Purchase Date:" />
+                    </td>
+                    <td>
+                        <h:inputText id="purchaseDate" value="#{carFormView.car.purchaseDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" type="localDate" />
+                        </h:inputText>
+                        <h:message for="purchaseDate" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <h:commandButton value="#{carFormView.submitButtonText}" action="#{carFormView.saveCar}"
+                            styleClass="btn" />
+                        <h:commandButton value="Cancel" action="#{carFormView.cancel}" immediate="true"
+                            styleClass="btn" />
+                    </td>
+                </tr>
+            </table>
+        </h:form>
+
+        <h:messages id="messages" />
+    </ui:define>
+</ui:composition>
+
+</html>
