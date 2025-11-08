@@ -1,0 +1,37 @@
+### Get all cars
+GET http://localhost:9080/car-manager/api/jaxrs/cars
+Accept: application/json
+
+### Get all cars of specific model
+GET http://localhost:9080/car-manager/api/jaxrs/models/ec6d51ac-87c5-491a-ac14-1c5ac85671d3/cars
+Accept: application/json
+
+### Get car info
+GET http://localhost:9080/car-manager/api/jaxrs/models/ec6d51ac-87c5-491a-ac14-1c5ac85671d3/cars/1a743509-51de-49cb-9d8e-94801eac099d
+Accept: application/json
+
+### Create car
+POST http://localhost:9080/car-manager/api/jaxrs/models/ec6d51ac-87c5-491a-ac14-1c5ac85671d3/cars
+Content-Type: application/json
+
+{
+  "owner": {
+    "id": "50f394a1-bfee-4712-835b-1bb48b151c9f"
+  },
+  "licensePlate": "GDA-98333",
+  "mileage": 25000,
+  "purchaseDate": "2025-03-20"
+}
+
+### Update car
+PUT http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20/cars/cc80103a-94b2-4d01-b8a5-d8ac6dcfa133
+Content-Type: application/json
+
+{
+  "licensePlate": "GDA-98765",
+  "mileage": 75000,
+  "purchaseDate": "2025-06-15"
+}
+
+### Delete car
+DELETE http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20/cars/f17ec299-4a01-4262-91e7-e0861b6d5fdc

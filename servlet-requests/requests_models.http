@@ -7,7 +7,7 @@ GET http://localhost:9080/car-manager/api/models?brand=TOYOTA
 Accept: application/json
 
 ### Get model info
-GET http://localhost:9080/car-manager/api/models/ca28bdd7-76e9-4dc5-af56-f27f79f3f547
+GET http://localhost:9080/car-manager/api/models/5a10733c-45d3-450c-acf7-90329652d074
 Accept: application/json
 
 ### Create new model

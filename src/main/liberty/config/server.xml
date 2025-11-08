@@ -2,8 +2,10 @@
     <featureManager>
         <feature>servlet-6.0</feature>
         <feature>jsonp-2.1</feature>
+        <feature>jsonb-3.0</feature>
         <feature>cdi-4.0</feature>
         <feature>faces-4.0</feature>
+        <feature>restfulWS-3.1</feature>
     </featureManager>
     <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
         <user name="username" password="password" />

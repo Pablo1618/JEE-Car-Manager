@@ -1,0 +1,30 @@
+### Get all models
+GET http://localhost:9080/car-manager/api/jaxrs/models
+Accept: application/json
+
+### Get model info
+GET http://localhost:9080/car-manager/api/jaxrs/models/b08651b7-a33e-4caa-b85f-274dac8e51ba
+Accept: application/json
+
+### Create new model
+POST http://localhost:9080/car-manager/api/jaxrs/models
+Content-Type: application/json
+
+{
+  "brand": "AUDI",
+  "name": "A4",
+  "hp": 190
+}
+
+### Update model
+PUT http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20
+Content-Type: application/json
+
+{
+  "brand": "TOYOTA",
+  "name": "Camry",
+  "hp": 250
+}
+
+### Delete model
+DELETE http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20
