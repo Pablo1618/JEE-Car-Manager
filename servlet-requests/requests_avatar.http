@@ -1,5 +1,5 @@
 ### Upload avatar
-PUT http://localhost:9080/car-manager/api/avatars/66fa581f-a118-45d1-83b3-b4ea0a5ad679
+PUT http://localhost:9080/car-manager/api/avatars/a8df7e9f-ca66-4441-9a41-c770489771d9
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -10,7 +10,7 @@ Content-Type: image/png
 --boundary--
 
 ### Get avatar
-GET http://localhost:9080/car-manager/api/avatars/66fa581f-a118-45d1-83b3-b4ea0a5ad679
+GET http://localhost:9080/car-manager/api/avatars/a8df7e9f-ca66-4441-9a41-c770489771d9
 
 ### Delete avatar
 DELETE http://localhost:9080/car-manager/api/avatars/8322d639-85db-483a-a772-03241c2fb173

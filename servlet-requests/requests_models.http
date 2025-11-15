@@ -31,4 +31,4 @@ Content-Type: application/json
 }
 
 ### Delete model
-DELETE http://localhost:9080/car-manager/api/models/41340105-8c2b-45ac-bdef-366f95d93d53
+DELETE http://localhost:9080/car-manager/api/models/f8c7b0a3-3b32-48e0-aa38-b771149b022f

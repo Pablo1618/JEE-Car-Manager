@@ -3,7 +3,7 @@ GET http://localhost:9080/car-manager/api/jaxrs/models
 Accept: application/json
 
 ### Get model info
-GET http://localhost:9080/car-manager/api/jaxrs/models/b08651b7-a33e-4caa-b85f-274dac8e51ba
+GET http://localhost:9080/car-manager/api/jaxrs/models/0b86a240-75e5-40c8-aaea-7b86f9bfe3f6
 Accept: application/json
 
 ### Create new model
@@ -17,14 +17,14 @@ Content-Type: application/json
 }
 
 ### Update model
-PUT http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20
+PUT http://localhost:9080/car-manager/api/jaxrs/models/6c426d63-fa2a-4929-9b8a-907d587a2018
 Content-Type: application/json
 
 {
   "brand": "TOYOTA",
-  "name": "Camry",
-  "hp": 250
+  "name": "Corolla v2",
+  "hp": 170
 }
 
 ### Delete model
-DELETE http://localhost:9080/car-manager/api/jaxrs/models/83346664-268b-4732-b845-dc65b07c5c20
+DELETE http://localhost:9080/car-manager/api/jaxrs/models/fadd04a7-9dc3-433a-bad7-09s01b12ac65a

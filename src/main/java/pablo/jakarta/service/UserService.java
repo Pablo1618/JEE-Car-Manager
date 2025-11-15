@@ -2,6 +2,7 @@ package pablo.jakarta.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import pablo.jakarta.model.User;
 import pablo.jakarta.repository.UserRepository;
 import java.util.List;
@@ -29,10 +30,12 @@ public class UserService {
         return userRepository.findById(id);
     }
     
+    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
     }
     
+    @Transactional
     public Optional<User> updateUser(UUID id, User updatedUser) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isPresent()) {
@@ -42,6 +45,7 @@ public class UserService {
         return Optional.empty();
     }
     
+    @Transactional
     public boolean deleteUser(UUID id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

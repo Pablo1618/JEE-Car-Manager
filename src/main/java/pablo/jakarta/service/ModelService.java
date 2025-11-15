@@ -2,6 +2,7 @@ package pablo.jakarta.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import pablo.jakarta.model.Car;
 import pablo.jakarta.model.Model;
 import pablo.jakarta.model.enums.Brand;
@@ -42,6 +43,7 @@ public class ModelService {
         return modelRepository.findByBrand(brand);
     }
     
+    @Transactional
     public Model createModel(Model model) {
         if (model.getBrand() == null) {
             throw new IllegalArgumentException("Brand is required");
@@ -52,38 +54,22 @@ public class ModelService {
         return modelRepository.save(model);
     }
     
+    @Transactional
     public Optional<Model> updateModel(UUID id, Model updatedModel) {
         Optional<Model> existingModel = modelRepository.findById(id);
         if (existingModel.isPresent()) {
             updatedModel.setId(id);
-            if (updatedModel.getCars() == null) {
-                updatedModel.setCars(existingModel.get().getCars());
-            }
             return Optional.of(modelRepository.save(updatedModel));
         }
         return Optional.empty();
     }
     
+    @Transactional
     public boolean deleteModel(UUID id) {
         if (!modelRepository.existsById(id)) {
             return false;
         }
-
-        Optional<Model> model = modelRepository.findById(id);
-        if (model.isPresent()) {
-            // Remove cars of this model
-            List<Car> carsToDelete = carRepository.findByModelId(id);
-            for (Car car : carsToDelete) {
-                // Also remove car from owner list
-                if (car.getOwner() != null && car.getOwner().getCars() != null) {
-                    car.getOwner().getCars().removeIf(c -> c.getId().equals(car.getId()));
-                    userRepository.save(car.getOwner());
-                }
-
-                carRepository.deleteById(car.getId());
-            }
-        }
-
+        
         modelRepository.deleteById(id);
         return true;
     }

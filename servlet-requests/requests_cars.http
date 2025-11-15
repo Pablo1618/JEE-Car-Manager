@@ -20,31 +20,31 @@ Content-Type: application/json
 
 {
   "model": {
-    "id": "41340105-8c2b-45ac-bdef-366f95d93d53"
+    "id": "2aa24be3-d163-42f1-8907-f81f126efc92"
   },
   "owner": {
-    "id": "97996278-5d91-4b61-a648-bb46976e0b05"
+    "id": "a8df7e9f-ca66-4441-9a41-c770489771d9"
   },
-  "licensePlate": "GDA12345",
+  "licensePlate": "GDA55556",
   "mileage": 15000,
   "purchaseDate": "2023-06-15"
 }
 
 ### Update car
-PUT http://localhost:9080/car-manager/api/cars/92aafd27-a3a8-417e-a769-7912738983ce
+PUT http://localhost:9080/car-manager/api/cars/4adcd689-a138-4dfe-b88e-8c625a3dff86
 Content-Type: application/json
 
 {
   "model": {
-    "id": "ca28bdd7-76e9-4dc5-af56-f27f79f3f547"
+    "id": "2aa24be3-d163-42f1-8907-f81f126efc92"
   },
   "owner": {
-    "id": "4d86cc17-d992-4dc1-a8d9-013de53a097e"
+    "id": "a8df7e9f-ca66-4441-9a41-c770489771d9"
   },
-  "licensePlate": "GDA12345",
+  "licensePlate": "GD12345",
   "mileage": 60000,
-  "purchaseDate": "2023-05-15"
+  "purchaseDate": "2025-05-15"
 }
 
 ### Delete car
-DELETE http://localhost:9080/car-manager/api/cars/92aafd27-a3a8-417e-a769-7912738983ce
+DELETE http://localhost:9080/car-manager/api/cars/9aeefe27-b89f-4738-b443-4de3952a7239

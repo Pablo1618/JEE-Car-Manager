@@ -1,39 +1,50 @@
 package pablo.jakarta.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import pablo.jakarta.model.User;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 public class UserRepository {
     
-    private final Map<UUID, User> users = new ConcurrentHashMap<>();
+    @PersistenceContext(unitName = "carManagerPU")
+    private EntityManager entityManager;
     
     public List<User> findAll() {
-        return new ArrayList<>(users.values());
+        return entityManager.createQuery("SELECT u FROM User u", User.class)
+                .getResultList();
     }
     
     public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(users.get(id));
+        User user = entityManager.find(User.class, id);
+        return Optional.ofNullable(user);
     }
     
     public User save(User user) {
         if (user.getId() == null) {
             user.setId(UUID.randomUUID());
+            entityManager.persist(user);
+            return user;
+        } else {
+            return entityManager.merge(user);
         }
-        users.put(user.getId(), user);
-        return user;
     }
     
     public boolean existsById(UUID id) {
-        return users.containsKey(id);
+        Long count = entityManager.createQuery(
+                "SELECT COUNT(u) FROM User u WHERE u.id = :id", Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        return count > 0;
     }
     
     public void deleteById(UUID id) {
-        users.remove(id);
+        User user = entityManager.find(User.class, id);
+        if (user != null) {
+            entityManager.remove(user);
+        }
     }
-
 }

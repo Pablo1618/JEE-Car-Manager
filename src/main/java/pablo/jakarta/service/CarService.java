@@ -2,6 +2,7 @@ package pablo.jakarta.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import pablo.jakarta.model.Car;
 import pablo.jakarta.model.Model;
 import pablo.jakarta.model.User;
@@ -46,6 +47,7 @@ public class CarService {
         return carRepository.findByOwnerId(ownerId);
     }
     
+    @Transactional
     public Car createCar(Car car) {
 
         if (car.getModel() == null || car.getModel().getId() == null) {
@@ -55,9 +57,8 @@ public class CarService {
                 .orElseThrow(() -> new IllegalArgumentException("Model not found"));
         car.setModel(model);
 
-        User owner = null;
         if (car.getOwner() != null && car.getOwner().getId() != null) {
-            owner = userRepository.findById(car.getOwner().getId())
+            User owner = userRepository.findById(car.getOwner().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
             car.setOwner(owner);
         }
@@ -66,107 +67,41 @@ public class CarService {
             throw new IllegalArgumentException("License plate is required");
         }
 
-        Car savedCar = carRepository.save(car);
-
-        if (model.getCars() != null && !model.getCars().contains(savedCar)) {
-            model.getCars().add(savedCar);
-            modelRepository.save(model);
-        }
-
-        if (owner != null && owner.getCars() != null && !owner.getCars().contains(savedCar)) {
-            owner.getCars().add(savedCar);
-            userRepository.save(owner);
-        }
-        
-        return savedCar;
+        return carRepository.save(car);
     }
     
+    @Transactional
     public Optional<Car> updateCar(UUID id, Car updatedCar) {
         Optional<Car> existingCar = carRepository.findById(id);
         if (existingCar.isEmpty()) {
             return Optional.empty();
         }
         
-        Car oldCar = existingCar.get();
-        Model oldModel = oldCar.getModel();
-        User oldOwner = oldCar.getOwner();
-        
         updatedCar.setId(id);
 
-        Model newModel;
         if (updatedCar.getModel() != null && updatedCar.getModel().getId() != null) {
-            newModel = modelRepository.findById(updatedCar.getModel().getId())
+            Model newModel = modelRepository.findById(updatedCar.getModel().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Model not found"));
             updatedCar.setModel(newModel);
         } else {
-            newModel = oldModel;
-            updatedCar.setModel(newModel);
+            updatedCar.setModel(existingCar.get().getModel());
         }
 
-        User newOwner;
         if (updatedCar.getOwner() != null && updatedCar.getOwner().getId() != null) {
-            newOwner = userRepository.findById(updatedCar.getOwner().getId())
+            User newOwner = userRepository.findById(updatedCar.getOwner().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
             updatedCar.setOwner(newOwner);
         } else {
-            newOwner = oldOwner;
-            updatedCar.setOwner(newOwner);
+            updatedCar.setOwner(existingCar.get().getOwner());
         }
         
-        Car savedCar = carRepository.save(updatedCar);
-
-        // Checking if model changed
-        if (oldModel != null && !oldModel.getId().equals(newModel.getId())) {
-            if (oldModel.getCars() != null) {
-                oldModel.getCars().removeIf(c -> c.getId().equals(id));
-                modelRepository.save(oldModel);
-            }
-
-            if (newModel.getCars() != null && !newModel.getCars().contains(savedCar)) {
-                newModel.getCars().add(savedCar);
-                modelRepository.save(newModel);
-            }
-        }
-        
-        // Checking if owner changed
-        if (oldOwner != null && newOwner != null && !oldOwner.getId().equals(newOwner.getId())) {
-            if (oldOwner.getCars() != null) {
-                oldOwner.getCars().removeIf(c -> c.getId().equals(id));
-                userRepository.save(oldOwner);
-            }
-
-            if (newOwner.getCars() != null && !newOwner.getCars().contains(savedCar)) {
-                newOwner.getCars().add(savedCar);
-                userRepository.save(newOwner);
-            }
-        } else if (oldOwner == null && newOwner != null) {
-            if (newOwner.getCars() != null && !newOwner.getCars().contains(savedCar)) {
-                newOwner.getCars().add(savedCar);
-                userRepository.save(newOwner);
-            }
-        }
-        
-        return Optional.of(savedCar);
+        return Optional.of(carRepository.save(updatedCar));
     }
     
+    @Transactional
     public boolean deleteCar(UUID id) {
-        Optional<Car> car = carRepository.findById(id);
-        if (car.isEmpty()) {
+        if (!carRepository.existsById(id)) {
             return false;
-        }
-        
-        Car carToDelete = car.get();
-
-        Model model = carToDelete.getModel();
-        if (model != null && model.getCars() != null) {
-            model.getCars().removeIf(c -> c.getId().equals(id));
-            modelRepository.save(model);
-        }
-
-        User owner = carToDelete.getOwner();
-        if (owner != null && owner.getCars() != null) {
-            owner.getCars().removeIf(c -> c.getId().equals(id));
-            userRepository.save(owner);
         }
         
         carRepository.deleteById(id);
