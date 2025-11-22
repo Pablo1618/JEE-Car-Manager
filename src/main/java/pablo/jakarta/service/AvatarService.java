@@ -1,6 +1,7 @@
 package pablo.jakarta.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pablo.jakarta.repository.AvatarRepository;
 import pablo.jakarta.repository.UserRepository;
@@ -11,20 +12,15 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 public class AvatarService {
     
+    @Inject
     private AvatarRepository avatarRepository;
-    private UserRepository userRepository;
-    
-    public AvatarService() {
-    }
     
     @Inject
-    public AvatarService(AvatarRepository avatarRepository, UserRepository userRepository) {
-        this.avatarRepository = avatarRepository;
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
     
     public void saveAvatar(UUID userId, InputStream inputStream) throws IOException {
         if (!userRepository.existsById(userId)) {

@@ -1,9 +1,8 @@
 package pablo.jakarta.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import pablo.jakarta.model.Car;
 import pablo.jakarta.model.Model;
 import pablo.jakarta.model.enums.Brand;
 import pablo.jakarta.repository.CarRepository;
@@ -14,22 +13,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 public class ModelService {
     
+    @Inject
     private ModelRepository modelRepository;
-    private CarRepository carRepository;
-    private UserRepository userRepository;
-    
-    public ModelService() {
-    }
     
     @Inject
-    public ModelService(ModelRepository modelRepository, CarRepository carRepository, UserRepository userRepository) {
-        this.modelRepository = modelRepository;
-        this.carRepository = carRepository;
-        this.userRepository = userRepository;
-    }
+    private CarRepository carRepository;
+    
+    @Inject
+    private UserRepository userRepository;
     
     public List<Model> getAllModels() {
         return modelRepository.findAll();
@@ -43,7 +38,6 @@ public class ModelService {
         return modelRepository.findByBrand(brand);
     }
     
-    @Transactional
     public Model createModel(Model model) {
         if (model.getBrand() == null) {
             throw new IllegalArgumentException("Brand is required");
@@ -54,7 +48,6 @@ public class ModelService {
         return modelRepository.save(model);
     }
     
-    @Transactional
     public Optional<Model> updateModel(UUID id, Model updatedModel) {
         Optional<Model> existingModel = modelRepository.findById(id);
         if (existingModel.isPresent()) {
@@ -64,7 +57,6 @@ public class ModelService {
         return Optional.empty();
     }
     
-    @Transactional
     public boolean deleteModel(UUID id) {
         if (!modelRepository.existsById(id)) {
             return false;

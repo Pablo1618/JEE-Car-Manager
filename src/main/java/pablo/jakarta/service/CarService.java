@@ -1,8 +1,8 @@
 package pablo.jakarta.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import pablo.jakarta.model.Car;
 import pablo.jakarta.model.Model;
 import pablo.jakarta.model.User;
@@ -14,22 +14,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 public class CarService {
     
+    @Inject
     private CarRepository carRepository;
-    private ModelRepository modelRepository;
-    private UserRepository userRepository;
-    
-    public CarService() {
-    }
     
     @Inject
-    public CarService(CarRepository carRepository, ModelRepository modelRepository, UserRepository userRepository) {
-        this.carRepository = carRepository;
-        this.modelRepository = modelRepository;
-        this.userRepository = userRepository;
-    }
+    private ModelRepository modelRepository;
+    
+    @Inject
+    private UserRepository userRepository;
     
     public List<Car> getAllCars() {
         return carRepository.findAll();
@@ -47,7 +43,6 @@ public class CarService {
         return carRepository.findByOwnerId(ownerId);
     }
     
-    @Transactional
     public Car createCar(Car car) {
 
         if (car.getModel() == null || car.getModel().getId() == null) {
@@ -70,7 +65,6 @@ public class CarService {
         return carRepository.save(car);
     }
     
-    @Transactional
     public Optional<Car> updateCar(UUID id, Car updatedCar) {
         Optional<Car> existingCar = carRepository.findById(id);
         if (existingCar.isEmpty()) {
@@ -98,7 +92,6 @@ public class CarService {
         return Optional.of(carRepository.save(updatedCar));
     }
     
-    @Transactional
     public boolean deleteCar(UUID id) {
         if (!carRepository.existsById(id)) {
             return false;

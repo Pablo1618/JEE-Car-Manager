@@ -1,26 +1,20 @@
 package pablo.jakarta.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import pablo.jakarta.model.User;
 import pablo.jakarta.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 public class UserService {
     
-    private UserRepository userRepository;
-    
-    public UserService() {
-    }
-    
     @Inject
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
     
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -30,12 +24,10 @@ public class UserService {
         return userRepository.findById(id);
     }
     
-    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
     }
     
-    @Transactional
     public Optional<User> updateUser(UUID id, User updatedUser) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isPresent()) {
@@ -45,7 +37,6 @@ public class UserService {
         return Optional.empty();
     }
     
-    @Transactional
     public boolean deleteUser(UUID id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
