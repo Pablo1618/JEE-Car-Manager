@@ -9,19 +9,19 @@
         <f:viewAction action="#{carFormView.init}" />
     </f:metadata>
 
-    <ui:define name="title">#{carFormView.pageTitle}</ui:define>
+    <ui:define name="title">#{carFormView.editMode ? msg['car_form.title.edit'] : msg['car_form.title.add']}</ui:define>
     <ui:define name="content">
-        <h2>#{carFormView.pageTitle}</h2>
+        <h2>#{carFormView.editMode ? msg['car_form.title.edit'] : msg['car_form.title.add']}</h2>
 
         <h:form>
             <table>
                 <tr>
                     <td>
-                        <h:outputLabel for="licensePlate" value="License Plate:" />
+                        <h:outputLabel for="licensePlate" value="#{msg['car_form.label.license_plate']}" />
                     </td>
                     <td>
                         <h:inputText id="licensePlate" value="#{carFormView.car.licensePlate}" required="true"
-                            requiredMessage="License plate is required">
+                            requiredMessage="#{msg['car_form.validation.license_plate']}">
                             <f:validateLength minimum="2" maximum="15" />
                         </h:inputText>
                         <h:message for="licensePlate" />
@@ -29,12 +29,13 @@
                 </tr>
                 <tr>
                     <td>
-                        <h:outputLabel for="model" value="Model:" />
+                        <h:outputLabel for="model" value="#{msg['car_form.label.model']}" />
                     </td>
                     <td>
                         <h:selectOneMenu id="model" value="#{carFormView.car.model}" converter="modelConverter"
-                            required="true" requiredMessage="Model is required">
-                            <f:selectItem itemLabel="-- Select Model --" itemValue="#{null}" noSelectionOption="true" />
+                            required="true" requiredMessage="#{msg['car_form.validation.model']}">
+                            <f:selectItem itemLabel="#{msg['car_form.select.model']}" itemValue="#{null}"
+                                noSelectionOption="true" />
                             <f:selectItems value="#{carFormView.availableModels}" var="m"
                                 itemLabel="#{m.brand} #{m.name}" itemValue="#{m}" />
                         </h:selectOneMenu>
@@ -43,11 +44,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <h:outputLabel for="owner" value="Owner:" />
+                        <h:outputLabel for="owner" value="#{msg['car_form.label.owner']}" />
                     </td>
                     <td>
                         <h:selectOneMenu id="owner" value="#{carFormView.car.owner}" converter="userConverter">
-                            <f:selectItem itemLabel="-- No Owner --" itemValue="#{null}" />
+                            <f:selectItem itemLabel="#{msg['car_form.select.no_owner']}" itemValue="#{null}" />
                             <f:selectItems value="#{carFormView.availableUsers}" var="u"
                                 itemLabel="#{u.login} (Age: #{u.age})" itemValue="#{u}" />
                         </h:selectOneMenu>
@@ -56,11 +57,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <h:outputLabel for="mileage" value="Mileage (km):" />
+                        <h:outputLabel for="mileage" value="#{msg['car_form.label.mileage']}" />
                     </td>
                     <td>
                         <h:inputText id="mileage" value="#{carFormView.car.mileage}" required="true"
-                            requiredMessage="Mileage is required">
+                            requiredMessage="#{msg['car_form.validation.mileage']}">
                             <f:validateLongRange minimum="0" maximum="999999" />
                         </h:inputText>
                         <h:message for="mileage" />
@@ -68,7 +69,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <h:outputLabel for="purchaseDate" value="Purchase Date:" />
+                        <h:outputLabel for="purchaseDate" value="#{msg['car_form.label.purchase_date']}" />
                     </td>
                     <td>
                         <h:inputText id="purchaseDate" value="#{carFormView.car.purchaseDate}">
@@ -80,10 +81,11 @@
                 <tr>
                     <td></td>
                     <td>
-                        <h:commandButton value="#{carFormView.submitButtonText}" action="#{carFormView.saveCar}"
-                            styleClass="btn" />
-                        <h:commandButton value="Cancel" action="#{carFormView.cancel}" immediate="true"
-                            styleClass="btn" />
+                        <h:commandButton
+                            value="#{carFormView.editMode ? msg['car_form.button.update'] : msg['car_form.button.create']}"
+                            action="#{carFormView.saveCar}" styleClass="btn" />
+                        <h:commandButton value="#{msg['car_form.button.cancel']}" action="#{carFormView.cancel}"
+                            immediate="true" styleClass="btn" />
                     </td>
                 </tr>
             </table>

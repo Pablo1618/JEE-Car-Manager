@@ -13,8 +13,10 @@ import pablo.jakarta.service.CarService;
 import pablo.jakarta.service.ModelService;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 @Named
@@ -45,7 +47,7 @@ public class ModelDetailView implements Serializable {
                 this.cars = carService.getCarsByModelId(modelId);
             } else {
                 FacesContext.getCurrentInstance().getExternalContext()
-                    .getFlash().put("error", "Model not found");
+                    .getFlash().put("error", getMessage("msg.model_not_found"));
             }
         }
     }
@@ -58,17 +60,27 @@ public class ModelDetailView implements Serializable {
                 
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                        "Success", "Car deleted successfully"));
+                        getMessage("msg.success"), getMessage("msg.car_deleted")));
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                        "Error", "Car not found"));
+                        getMessage("msg.error"), getMessage("msg.car_not_found")));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error", "Failed to delete car: " + e.getMessage()));
+                    getMessage("msg.error"), getMessage("msg.car_delete_failed", e.getMessage())));
         }
     }
 
+    private String getMessage(String key) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        return bundle.getString(key);
+    }
+
+    private String getMessage(String key, Object... params) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        String msg = bundle.getString(key);
+        return MessageFormat.format(msg, params);
+    }
 }

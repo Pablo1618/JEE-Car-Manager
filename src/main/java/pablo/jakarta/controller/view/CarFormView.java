@@ -15,9 +15,11 @@ import pablo.jakarta.service.ModelService;
 import pablo.jakarta.service.UserService;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 @Named
@@ -60,7 +62,7 @@ public class CarFormView implements Serializable {
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Car not found"));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessage("msg.error"), getMessage("msg.car_not_found")));
             }
         } else {
             // Add car
@@ -82,13 +84,13 @@ public class CarFormView implements Serializable {
                 if (updated.isPresent()) {
                     FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                            "Success", "Car updated successfully"));
+                            getMessage("msg.success"), getMessage("msg.car_updated")));
                     
                     return "/car/car_detail.xhtml?faces-redirect=true&carId=" + carId;
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                            "Error", "Failed to update car"));
+                            getMessage("msg.error"), getMessage("msg.car_update_failed")));
                     return null;
                 }
             } else {
@@ -96,7 +98,7 @@ public class CarFormView implements Serializable {
                 Car created = carService.createCar(car);
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                        "Success", "Car created successfully"));
+                        getMessage("msg.success"), getMessage("msg.car_created")));
                 
                 if (car.getModel() != null && car.getModel().getId() != null) {
                     return "/model/model_detail.xhtml?faces-redirect=true&modelId=" + car.getModel().getId();
@@ -107,12 +109,12 @@ public class CarFormView implements Serializable {
         } catch (IllegalArgumentException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error", e.getMessage()));
+                    getMessage("msg.error"), e.getMessage()));
             return null;
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error", "An unexpected error occurred: " + e.getMessage()));
+                    getMessage("msg.error"), getMessage("msg.unexpected_error", e.getMessage())));
             return null;
         }
     }
@@ -143,5 +145,14 @@ public class CarFormView implements Serializable {
         return editMode ? "Update Car" : "Create Car";
     }
 
+    private String getMessage(String key) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        return bundle.getString(key);
+    }
 
+    private String getMessage(String key, Object... params) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        String msg = bundle.getString(key);
+        return MessageFormat.format(msg, params);
+    }
 }

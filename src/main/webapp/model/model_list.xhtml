@@ -3,40 +3,40 @@
     xmlns:f="jakarta.faces.core">
 
 <ui:composition template="/WEB-INF/templates/template.xhtml">
-    <ui:define name="title">Car Models</ui:define>
+    <ui:define name="title">#{msg['models.title']}</ui:define>
     <ui:define name="content">
-        <h2>Car Models</h2>
+        <h2>#{msg['models.title']}</h2>
 
         <h:panelGroup id="modelListPanel">
             <h:panelGroup rendered="#{empty modelListView.models}">
-                <p>No models available</p>
+                <p>#{msg['models.no_models']}</p>
             </h:panelGroup>
 
             <h:panelGroup rendered="#{not empty modelListView.models}">
                 <h:dataTable value="#{modelListView.models}" var="model">
                     <h:column>
-                        <f:facet name="header">Brand</f:facet>
+                        <f:facet name="header">#{msg['models.header.brand']}</f:facet>
                         #{model.brand}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Model</f:facet>
+                        <f:facet name="header">#{msg['models.header.model']}</f:facet>
                         #{model.name}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">HP</f:facet>
+                        <f:facet name="header">#{msg['models.header.hp']}</f:facet>
                         #{model.hp}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Cars</f:facet>
+                        <f:facet name="header">#{msg['models.header.cars']}</f:facet>
                         #{modelListView.getCarCountForModel(model.id)}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Action</f:facet>
-                        <h:link outcome="model_detail" value="View" styleClass="btn">
+                        <f:facet name="header">#{msg['models.header.action']}</f:facet>
+                        <h:link outcome="model_detail" value="#{msg['action.view']}" styleClass="btn">
                             <f:param name="modelId" value="#{model.id}" />
                         </h:link>
                         <h:form style="display:inline;">
-                            <h:commandButton value="Delete" styleClass="btn"
+                            <h:commandButton value="#{msg['action.delete']}" styleClass="btn"
                                 action="#{modelListView.deleteModel(model.id)}">
                                 <f:ajax execute="@form" render=":modelListPanel :messages" />
                             </h:commandButton>

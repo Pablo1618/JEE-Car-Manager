@@ -8,61 +8,61 @@
         <f:viewAction action="#{modelDetailView.init}" />
     </f:metadata>
 
-    <ui:define name="title">Model Details</ui:define>
+    <ui:define name="title">#{msg['model_detail.title']}</ui:define>
     <ui:define name="content">
-        <h:link outcome="model_list" value="Back to Models" styleClass="btn" />
+        <h:link outcome="model_list" value="#{msg['action.back']}" styleClass="btn" />
 
         <h:panelGroup rendered="#{empty modelDetailView.model}">
-            <p>Model not found</p>
+            <p>#{msg['model_detail.not_found']}</p>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{not empty modelDetailView.model}">
-            <h2>Model Details</h2>
-            <p><strong>Brand:</strong> #{modelDetailView.model.brand}</p>
-            <p><strong>Model:</strong> #{modelDetailView.model.name}</p>
-            <p><strong>Horsepower:</strong> #{modelDetailView.model.hp}</p>
-            <p><strong>ID:</strong> #{modelDetailView.model.id}</p>
+            <h2>#{msg['model_detail.title']}</h2>
+            <p><strong>#{msg['model_detail.brand']}</strong> #{modelDetailView.model.brand}</p>
+            <p><strong>#{msg['model_detail.model']}</strong> #{modelDetailView.model.name}</p>
+            <p><strong>#{msg['model_detail.hp']}</strong> #{modelDetailView.model.hp}</p>
+            <p><strong>#{msg['model_detail.id']}</strong> #{modelDetailView.model.id}</p>
 
-            <h3>Cars with this Model</h3>
-            <h:link outcome="/car/car_form" value="Add New Car" styleClass="btn">
+            <h3>#{msg['model_detail.cars_title']}</h3>
+            <h:link outcome="/car/car_form" value="#{msg['model_detail.add_car']}" styleClass="btn">
                 <f:param name="modelId" value="#{modelDetailView.model.id}" />
             </h:link>
 
             <h:panelGroup id="carListPanel">
                 <h:panelGroup rendered="#{empty modelDetailView.cars}">
-                    <p>No cars found for this model</p>
+                    <p>#{msg['model_detail.no_cars']}</p>
                 </h:panelGroup>
 
                 <h:panelGroup rendered="#{not empty modelDetailView.cars}">
-                    <p>Total Cars: #{modelDetailView.cars.size()}</p>
+                    <p>#{msg['model_detail.total_cars']} #{modelDetailView.cars.size()}</p>
                     <h:dataTable value="#{modelDetailView.cars}" var="car">
                         <h:column>
-                            <f:facet name="header">License Plate</f:facet>
+                            <f:facet name="header">#{msg['car.header.license_plate']}</f:facet>
                             #{car.licensePlate}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Owner</f:facet>
-                            #{empty car.owner ? 'No owner' : car.owner.login}
+                            <f:facet name="header">#{msg['car.header.owner']}</f:facet>
+                            #{empty car.owner ? msg['car.no_owner'] : car.owner.login}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Mileage</f:facet>
+                            <f:facet name="header">#{msg['car.header.mileage']}</f:facet>
                             #{car.mileage} km
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Purchase Date</f:facet>
+                            <f:facet name="header">#{msg['car.header.purchase_date']}</f:facet>
                             #{car.purchaseDate}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Action</f:facet>
-                            <h:link outcome="/car/car_detail" value="View" styleClass="btn">
+                            <f:facet name="header">#{msg['models.header.action']}</f:facet>
+                            <h:link outcome="/car/car_detail" value="#{msg['action.view']}" styleClass="btn">
                                 <f:param name="carId" value="#{car.id}" />
                             </h:link>
-                            <h:link outcome="/car/car_form" value="Edit" styleClass="btn">
+                            <h:link outcome="/car/car_form" value="#{msg['action.edit']}" styleClass="btn">
                                 <f:param name="carId" value="#{car.id}" />
                                 <f:param name="modelId" value="#{modelDetailView.model.id}" />
                             </h:link>
                             <h:form style="display:inline;">
-                                <h:commandButton value="Delete" styleClass="btn"
+                                <h:commandButton value="#{msg['action.delete']}" styleClass="btn"
                                     action="#{modelDetailView.deleteCar(car.id)}">
                                     <f:ajax execute="@form" render=":carListPanel :messages" />
                                 </h:commandButton>

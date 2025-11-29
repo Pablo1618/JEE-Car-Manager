@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.3">
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>pl</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+</faces-config>

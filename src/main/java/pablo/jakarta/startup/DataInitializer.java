@@ -14,6 +14,7 @@ import pablo.jakarta.service.UserService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -31,7 +32,8 @@ public class DataInitializer {
     private UserService userService;
 
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-
+        Locale.setDefault(Locale.ENGLISH);
+        
         userService.createUser(new User("user1", 25, LocalDate.of(2024, 5, 15)));
         userService.createUser(new User("user2", 30, LocalDate.of(2015, 8, 22)));
         userService.createUser(new User("user3", 28, LocalDate.of(2016, 12, 10)));

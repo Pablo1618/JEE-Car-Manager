@@ -8,42 +8,43 @@
         <f:viewAction action="#{carDetailView.init}" />
     </f:metadata>
 
-    <ui:define name="title">Car Details</ui:define>
+    <ui:define name="title">#{msg['car_detail.title']}</ui:define>
     <ui:define name="content">
-        <h:link outcome="/model/model_list" value="Back to Models" styleClass="btn" />
+        <h:link outcome="/model/model_list" value="#{msg['action.back']}" styleClass="btn" />
 
         <h:panelGroup rendered="#{empty carDetailView.car}">
-            <p>Car not found</p>
+            <p>#{msg['car_detail.not_found']}</p>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{not empty carDetailView.car}">
-            <h2>Car Details</h2>
-            <p><strong>License Plate:</strong> #{carDetailView.car.licensePlate}</p>
-            <p><strong>Mileage:</strong> #{carDetailView.car.mileage} km</p>
-            <p><strong>Purchase Date:</strong> #{carDetailView.car.purchaseDate}</p>
-            <p><strong>Car ID:</strong> #{carDetailView.car.id}</p>
+            <h2>#{msg['car_detail.title']}</h2>
+            <p><strong>#{msg['car_detail.license_plate']}</strong> #{carDetailView.car.licensePlate}</p>
+            <p><strong>#{msg['car_detail.mileage']}</strong> #{carDetailView.car.mileage} km</p>
+            <p><strong>#{msg['car_detail.purchase_date']}</strong> #{carDetailView.car.purchaseDate}</p>
+            <p><strong>#{msg['car_detail.id']}</strong> #{carDetailView.car.id}</p>
 
-            <h3>Model Information</h3>
+            <h3>#{msg['car_detail.model_info']}</h3>
             <h:panelGroup rendered="#{not empty carDetailView.car.model}">
-                <p><strong>Brand:</strong> #{carDetailView.car.model.brand}</p>
-                <p><strong>Model:</strong> #{carDetailView.car.model.name}</p>
-                <p><strong>Horsepower:</strong> #{carDetailView.car.model.hp}</p>
-                <h:link outcome="/model/model_detail" value="View Model Details" styleClass="btn">
+                <p><strong>#{msg['model_detail.brand']}</strong> #{carDetailView.car.model.brand}</p>
+                <p><strong>#{msg['model_detail.model']}</strong> #{carDetailView.car.model.name}</p>
+                <p><strong>#{msg['model_detail.hp']}</strong> #{carDetailView.car.model.hp}</p>
+                <h:link outcome="/model/model_detail" value="#{msg['car_detail.view_model']}" styleClass="btn">
                     <f:param name="modelId" value="#{carDetailView.car.model.id}" />
                 </h:link>
             </h:panelGroup>
             <h:panelGroup rendered="#{empty carDetailView.car.model}">
-                <p>No model information</p>
+                <p>#{msg['car_detail.no_model']}</p>
             </h:panelGroup>
 
-            <h3>Owner Information</h3>
+            <h3>#{msg['car_detail.owner_info']}</h3>
             <h:panelGroup rendered="#{not empty carDetailView.car.owner}">
-                <p><strong>Login:</strong> #{carDetailView.car.owner.login}</p>
-                <p><strong>Age:</strong> #{carDetailView.car.owner.age}</p>
-                <p><strong>Driver License Issue Date:</strong> #{carDetailView.car.owner.driverLicenseIssueDate}</p>
+                <p><strong>#{msg['car_detail.owner_login']}</strong> #{carDetailView.car.owner.login}</p>
+                <p><strong>#{msg['car_detail.owner_age']}</strong> #{carDetailView.car.owner.age}</p>
+                <p><strong>#{msg['car_detail.owner_license_date']}</strong>
+                    #{carDetailView.car.owner.driverLicenseIssueDate}</p>
             </h:panelGroup>
             <h:panelGroup rendered="#{empty carDetailView.car.owner}">
-                <p>No owner assigned</p>
+                <p>#{msg['car_detail.no_owner_assigned']}</p>
             </h:panelGroup>
         </h:panelGroup>
     </ui:define>
